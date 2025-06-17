@@ -1,18 +1,20 @@
 import dayjs from "dayjs";
 import { openingHours } from "../../utils/opening-hours.js";
+import { hoursClick } from "./hours-click.js";
 
-const hours = document.getElementById("hours")
+const hours = document.getElementById("hours") // ul list about the hours
 
 export function hoursLoad({date}) {
+    hours.innerHTML = ""
+
     const opening = openingHours.map((hour) => {
 
         const [scheduleHour] = hour.split(":")
 
         const isHourPast = dayjs(date).add(scheduleHour, "hour").isAfter(dayjs())
-        
-        return {hour, available: isHourPast}
-    })
 
+        return {hour, available: isHourPast} // every iteration create a new object in the opening array
+    })
 
     opening.forEach(({hour, available}) => {
         const li = document.createElement("li")
@@ -21,7 +23,7 @@ export function hoursLoad({date}) {
         li.classList.add(available ? "hour-available" : "hour-unavailable")
         li.textContent = hour
 
-        if (hour === "9:00") {
+        if (hour === "9:00") { // the header only add a header, not a class in the li element
             hourHeaderAdd("Manhã")
         } else if (hour === "13:00") {
             hourHeaderAdd("Tarde")
@@ -31,6 +33,8 @@ export function hoursLoad({date}) {
 
         hours.append(li)
     })
+
+    hoursClick()
 
 }
 
